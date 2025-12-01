@@ -3,7 +3,7 @@
 body {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 /* Header style */
@@ -15,22 +15,6 @@ header {
     font-size: 36px;
     background-color: #1b263b;
     color: white;
-}
-
-/* Main content style */
-
-.bf-image {
-    background-image: url('assets/math.jpg');
-    filter: blur(5x);
-    -webkit-filter: blur(5px);
-
-    /* Full height */
-    height: 100%;
-
-    /* Center and scale the image nicely */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 .main-content {
@@ -45,7 +29,9 @@ header {
     border-style: solid;
     margin: 20px 20px 0px 20px;
     border-radius: 10px;
-    background-color: black;
+    background-color: #1b263b;
+    border-color: black;
+    color: white;
 }
 
 .calculator {
@@ -54,7 +40,7 @@ header {
     border-width: 2px;
     border-style: solid;
     border-radius: 25px;
-    background-color:#415a77;
+    background-color: #415a77;
     box-shadow: 20px 20px 20px 2px rgb(100, 100, 100);
 
 }
@@ -79,7 +65,12 @@ button {
     border-color: #eeeeee;
 }
 
-.equal, .remove {
+button:active {
+    scale: 90%;
+}
+
+.equal,
+.remove {
     flex-basis: calc(50% - 10px);
 }
 
