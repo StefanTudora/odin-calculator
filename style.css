@@ -70,7 +70,7 @@ button:active {
 }
 
 .equal,
-.remove {
+.delete {
     flex-basis: calc(50% - 10px);
 }
 
