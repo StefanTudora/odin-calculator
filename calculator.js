@@ -1,16 +1,22 @@
 
-// Container class for the logic
+// Container class for the model logic
 class Calculator {
 
     constructor() {
         this.first = "";
         this.second = "";
         this.op = null;
+        // Remove flag, repace with FSM
+        this.resFlag = false;
     }
 
-    // Complent the operand, take in account if op is set
+    // Add digits to the operand, take in account if op is set
     addDigit(digit) {
-        if (op === null) {
+        if (this.resFlag == true) {
+            this.first = "";
+            this.resFlag = false;
+        }
+        if (this.op === null) {
             this.first += digit;
         } else {
             this.second += digit;
@@ -19,7 +25,7 @@ class Calculator {
 
     // Delete the last digit of the current operand, take in account if op is set
     deleteDigit() {
-        if (op === null) {
+        if (this.op === null) {
             if (this.first !== "") {
                 this.first = this.first.slice(0, -1);
             }
@@ -32,6 +38,7 @@ class Calculator {
 
     setOperator(op) {
         this.op = op;
+        this.resFlag = false;
     }
 
     // Returns the value of the current expression
@@ -39,12 +46,9 @@ class Calculator {
         if (this.first === "") {
             return "0";
         }
-        let value = parseInt(this.first);
-        if (this.second === "") {
-            return value;
-        }
-        let secondInt = parseInt(this.second);
-        switch(op) {
+        let value = Number(parseFloat(this.first).toFixed(2));
+        let secondInt = this.second !== "" ? Number(parseFloat(this.second).toFixed(2)) : 0;
+        switch(this.op) {
             case "+":
                 value += secondInt;
                 break;
@@ -56,32 +60,43 @@ class Calculator {
                 break;
             case "/": 
                 if (secondInt === 0) {
-                    // Print error message and return
+                    console.log("Cannot divide by zero!");
                     return value;
                 }
                 value /= secondInt;
                 break;
         }
-        return value;
+        return Number(value.toFixed(2));
     }
 
     getCurrentOperand() {
-        if (this.first === null) {
+        if (this.op === null) {
             return this.first;
         }
         return this.second;
     }
 
-    clearMode() {
-        this.first = null;
-        this.second = null;
+    clearModel() {
+        this.first = "";
+        this.second = "";
         this.op = null;
+        this.resFlag = false;
     }
+
+    setFirst(first) {
+        this.first = first;
+    }
+    
+    setResultFlag(resFlag) {
+        this.resFlag = resFlag;
+    }
+
 }
 
 
 function attachListeners(calcObj) {
     const displayNode = document.querySelector('.display');
+    displayNode.innerText = "0";
     const digitNodes = document.querySelectorAll('.digit');
     digitNodes.forEach(digitElement => {
         digitElement.addEventListener("click", () => {
@@ -98,13 +113,21 @@ function attachListeners(calcObj) {
     const delNode = document.querySelector('.delete');
     delNode.addEventListener("click", () => {
         calcObj.deleteDigit();
-        displayNode.innerText = calcObj.getCurrentOperand();
+        const currOperand = calcObj.getCurrentOperand();
+        displayNode.innerText = currOperand !== "" ? currOperand : "0";
     });
     const eqNode = document.querySelector('.equal');
     eqNode.addEventListener("click", () => {
-        const dispayValue = calcObj.calcExpression();
+        const displayValue = calcObj.calcExpression();
         calcObj.clearModel();
-        displayNode.innerText = dispayValue;
+        calcObj.setFirst(displayValue);
+        calcObj.setResultFlag(true);
+        displayNode.innerText = displayValue.toString();
+    });
+    const clNode = document.querySelector('.clear');
+    clNode.addEventListener("click", () => {
+        calcObj.clearModel();
+        displayNode.innerText = "0";
     });
 }
 
@@ -113,3 +136,5 @@ function init() {
     let calcObj = new Calculator();
     attachListeners(calcObj);
 }
+
+init();
